@@ -1,4 +1,4 @@
-#refinedBcellmeta subsetted to exclude clusters identified as artifacts, technical, T/B doublets and MNP/B doublets
+#refinedBcellmeta subsetted to exclude cells in clusters identified as artifacts, technical, T/B doublets and MNP/B doublets
 
 
 ### Load datasets, select B cells, preprocess and integrate them 
@@ -13,9 +13,9 @@ library(ggplot2)
 
 # Initialization
 
-meta <- read.csv("~/subsetted_meta.csv")
-setwd ("~/scRNA_datasets")
-source ("~/scRNA_tools/tools_v1.2.R")
+meta <- read.csv("/SAN/colcc/tigilab-general/evie/Bcellatlas_files_subsetted_meta.csv")
+setwd ("/SAN/colcc/NMD_inputs/scRNA_datasets")
+source ("/SAN/colcc/NMD_analysis/github_scripts/NextGenTargets_WorkStream2/scRNA_tools/tools_v1.2.R")
 
 studies <- c(
   "Azizi",
@@ -35,21 +35,21 @@ studies <- c(
   "ZhangYY")
 
 files <- c(
-  "~/scRNA_datasets/AZIZI_CELL_2018/download/Azizi_human.h5Seurat", 
-  "~/scRNA_datasets/BRAUN_CANCERCELL_2021/download/BRAUN.h5Seurat", 
-  "~/scRNA_datasets/Chan_CancerCell_2021/Chan_combined.h5seurat", 
-  "~/scRNA_datasets/KRISHNA_CANCERCELL_2021/KRISHNA_RCC.h5seurat",
-  "~/scRNA_datasets/KIM_NCOMMS_2020/KIM_counts.h5Seurat",
-  "~/scRNA_datasets/YOST_NMED_2019/BASAL_CELL_CARCINOMA_raw_counts.h5Seurat", # failed to get raw count - we need it
-  "~/scRNA_datasets/LI_CELL_2019/Li.h5Seurat",
-  "~/scRNA_datasets/Maynard_CELL_2020/Maynard.h5seurat", 
-  "~/scRNA_datasets/BI_CANCERCELL_2021/download/Bi.h5seurat",
-  "~/scRNA_datasets/Pelka_CELL_2021/Pelka_CRC.h5Seurat",
-  "~/scRNA_datasets/QIAN_NATURECELL_2020/QIAN_NATURECELL_2020_combined4_raw_counts.h5Seurat",
-  "~/scRNA_datasets/VISHWAKARMA_COMMBIOL_2021/VISHWAKARMA_COMMBIOL_2021_combined6_raw_counts.h5Seurat",
-  "~/scRNA_datasets/Wu_NatureComm_2021/Wu.h5Seurat",
-  "~/scRNA_datasets/ZILIONIS_CELL_2019/Zilionis_rawcounts.h5Seurat", 
-  "~/scRNA_datasets/ZhangYY_CancerCell_2021/ZhangYY.h5seurat")
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/AZIZI_CELL_2018/download/Azizi_human.h5Seurat", 
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/BRAUN_CANCERCELL_2021/download/BRAUN.h5Seurat", 
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/Chan_CancerCell_2021/Chan_combined.h5seurat", 
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/KRISHNA_CANCERCELL_2021/KRISHNA_RCC.h5seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/KIM_NCOMMS_2020/KIM_counts.h5Seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/YOST_NMED_2019/BASAL_CELL_CARCINOMA_raw_counts.h5Seurat", # failed to get raw count - we need it
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/LI_CELL_2019/Li.h5Seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/Maynard_CELL_2020/Maynard.h5seurat", 
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/BI_CANCERCELL_2021/download/Bi.h5seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/Pelka_CELL_2021/Pelka_CRC.h5Seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/QIAN_NATURECELL_2020/QIAN_NATURECELL_2020_combined4_raw_counts.h5Seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/VISHWAKARMA_COMMBIOL_2021/VISHWAKARMA_COMMBIOL_2021_combined6_raw_counts.h5Seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/Wu_NatureComm_2021/Wu.h5Seurat",
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/ZILIONIS_CELL_2019/Zilionis_rawcounts.h5Seurat", 
+  "/SAN/colcc/NMD_inputs/scRNA_datasets/ZhangYY_CancerCell_2021/ZhangYY.h5seurat")
 
 exp <- list()
 
@@ -72,9 +72,10 @@ for (i in 1:15) {
 }
 
 #saveRDS(data_cells, "cellids_in_rawdata.rds")
-gs2new <- readRDS("~/tools/GeneSymbol2Current.rds")
+gs2new <- readRDS("/SAN/colcc/NMD_inputs/DC_results/tools/GeneSymbol2Current.rds")
 
 #Set working directory
+setwd ("/SAN/colcc/tigilab-general/evie")
 studies <- studies[1:15]
 nstudy <- length(studies)
 
@@ -124,6 +125,7 @@ for (i in 1:nstudy) {
 
 saveRDS(exp, "Tumour_subsetted_sctransformed.rds")
 
+# *** refer to /home/murai/DC/scRNA_genelists
 
 DONTRUN = FALSE
 
@@ -139,7 +141,7 @@ if (!DONTRUN) {
 }
   #Step 6
   if (TRUE) {
-    source("~tools/integrate_functions_mod.R")    
+    source("/SAN/colcc/NMD_inputs/DC_results/tools/integrate_functions_mod.R")    
     exp <- IntegrateDataW(anchors, normalization.method = "SCT")
     saveRDS(exp, "Tumour_subsetted_integrated_beforeUmap.rds")
     
@@ -154,7 +156,7 @@ if (!DONTRUN) {
     ncell <- dim(exp@reductions$pca@cell.embeddings)[1]
     DefaultAssay(exp) <- "integrated"
     # running
-    for (r in c(0.4, 0.5, 0.6, 0.8, 0.9, 1.1, 1.3, 1.4, 1.6, 1.8, 1.9, 2.5)) {
+    for (r in c(0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1.1, 1.3, 1.4, 1.6, 1.8, 1.9, 2.5)) {
       exp <- FindClusters(exp, resolution = r)
       ncl <- length(unique(Idents(exp)))
       s   <- getSSEfromExp(exp)
@@ -165,6 +167,6 @@ if (!DONTRUN) {
     
     # Prepare for gene expression analysis
     DefaultAssay(exp) <- "SCT"
-    saveRDS(exp, "Tumour_subsetted_integrated.rds")
+    saveRDS(exp, "Tumourlowres_subsetted_integrated.rds")
   }
 
